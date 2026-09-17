@@ -311,10 +311,9 @@ These extensions can help determine whether more flexible models provide meaning
 
 ## 16. Kaggle Notebook
 
-A Kaggle version of this project will be published for interactive execution.
+An executable version of this project is available on Kaggle for interactive exploration and reproducible execution.
 
-**Kaggle Notebook:** Coming soon.
-
+**Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-price-prediction-linear-regressio)
 ---
 
 ## Project Structure
