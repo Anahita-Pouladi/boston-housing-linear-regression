@@ -6,6 +6,18 @@ The project focuses not only on predictive performance, but also on the reasonin
 
 ---
 
+## Learning Resources
+
+This repository also includes focused learning materials that explain the theory and statistics behind the project:
+
+- [Linear Regression Tutorial](docs/linear_regression_tutorial.md)
+- [Statistics for Regression](docs/statistics_for_regression.md)
+- [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb)
+
+These resources connect the theoretical concepts directly to the implementation and diagnostics used in the Boston Housing project.
+
+---
+
 ## 1. Project Overview
 
 The goal of this project is to predict `MEDV`, the median value of owner-occupied homes in Boston-area towns, using 13 input features.
@@ -317,8 +329,12 @@ boston-housing-linear-regression/
 ├── data/
 │   └── HousingData.csv
 │
-└── notebooks/
-    └── boston_housing_linear_regression.ipynb
+├── notebooks/
+│   └── boston_housing_linear_regression.ipynb
+│
+└── docs/
+    ├── linear_regression_tutorial.md
+    └── statistics_for_regression.md
 ```
 
 ---
@@ -340,6 +356,15 @@ This project helped reinforce several important machine learning practices:
 
 ---
 
-## Repository
+## Repository Contents
 
-The complete notebook, dataset, dependencies, and project documentation are available in this repository.
+The repository contains:
+
+- A reproducible Jupyter Notebook
+- The dataset used in the project
+- Project dependencies
+- A Linear Regression tutorial
+- A statistics-for-regression guide
+- Full project documentation
+
+You can start with the [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb) or review the [Linear Regression Tutorial](docs/linear_regression_tutorial.md) first.
