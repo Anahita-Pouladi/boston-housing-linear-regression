@@ -1,42 +1,36 @@
 # Boston Housing Price Prediction with Linear Regression
 
-An end-to-end machine learning project exploring the historical Boston Housing dataset and building an interpretable Linear Regression baseline for housing value prediction.
-
-The project focuses not only on predictive performance, but also on the reasoning behind the machine learning workflow — including data validation, exploratory analysis, missing-value handling, multicollinearity, residual diagnostics, cross-validation, and model interpretation.
+An end-to-end regression project built around the historical Boston Housing dataset. I use Linear Regression as an interpretable baseline, then look beyond a single performance score by checking data quality, residual behavior, multicollinearity, and cross-validation.
 
 ---
 
 ## Learning Resources
 
-This repository also includes focused learning materials that explain the theory and statistics behind the project:
+Alongside the main notebook, this repository includes two focused guides that connect the theory directly to the project:
 
 - [Linear Regression Tutorial](docs/linear_regression_tutorial.md)
 - [Statistics for Regression](docs/statistics_for_regression.md)
 - [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb)
 
-These resources connect the theoretical concepts directly to the implementation and diagnostics used in the Boston Housing project.
-
 ---
 
 ## 1. Project Overview
 
-The goal of this project is to predict `MEDV`, the median value of owner-occupied homes in Boston-area towns, using 13 input features.
+The goal is to predict `MEDV`, the median value of owner-occupied homes in Boston-area towns, from 13 input features.
 
-Since the target is numerical and continuous, this is a supervised regression problem.
-
-Linear Regression is used as the baseline model because it provides a simple and interpretable starting point for understanding the relationship between housing characteristics and the target variable.
+Because `MEDV` is continuous, this is a supervised regression problem. I start with Linear Regression because it provides a transparent baseline: the model is easy to inspect, the coefficients are interpretable, and its limitations are useful to diagnose before moving to more flexible methods.
 
 ---
 
 ## 2. Business / Problem Statement
 
-The objective is to build a transparent regression baseline that can answer three practical questions:
+Rather than treating this as a pure prediction exercise, I use the baseline to answer three practical questions:
 
-1. Which variables show the strongest relationships with housing values?
-2. How accurately can a Linear Regression model predict unseen observations?
-3. Do the residuals and model diagnostics support the assumptions behind a linear modeling approach?
+1. Which variables have the clearest linear relationships with housing values?
+2. How well does the model generalize to unseen observations?
+3. What do the residuals and model diagnostics tell us about the limits of a linear approach?
 
-Rather than treating prediction accuracy as the only goal, this project also examines the statistical behavior and limitations of the model.
+The emphasis is therefore split between predictive performance and statistical diagnostics.
 
 ---
 
@@ -48,16 +42,16 @@ The dataset contains:
 - **13 input features**
 - **1 target variable: `MEDV`**
 
-The records represent Boston-area suburbs or towns and originate from historical data collected around 1970.
+The records describe Boston-area suburbs or towns and come from historical data collected around 1970.
 
-During the initial data-quality assessment:
+The initial data-quality review found:
 
-- No duplicate rows were found.
-- Several features contained missing values.
-- `MEDV` contained no missing values.
-- A total of **120 missing values** were identified across the predictor columns.
+- no duplicate rows,
+- missing values in several predictor columns,
+- no missing values in `MEDV`,
+- and **120 missing values** across the predictors.
 
-Missing values were observed in:
+Missing values appear in:
 
 - `CRIM`
 - `ZN`
@@ -66,11 +60,11 @@ Missing values were observed in:
 - `AGE`
 - `LSTAT`
 
-Each of these columns contained 20 missing observations.
+Each of these columns contains 20 missing observations.
 
 > **Responsible-use note**
 >
-> This is a historical educational dataset. One of the original features (`B`) is race-derived, and the observations come from historical 1970-era data. This project is intended for machine learning education and should not be treated as a modern housing valuation, lending, or policy model.
+> This is a historical educational dataset. One of the original features (`B`) is race-derived, and the observations come from 1970-era data. I use the dataset here to study regression workflow and diagnostics, not as a model for modern housing valuation, lending, or policy decisions.
 
 ---
 
@@ -97,50 +91,48 @@ Each of these columns contained 20 missing observations.
 
 ## 5. Data Preprocessing
 
-The preprocessing workflow was designed to reduce data leakage and keep the baseline model easy to interpret.
-
-The dataset was first split into training and test sets. Missing values were then handled inside a Scikit-learn `Pipeline` using:
+I split the data before fitting any data-dependent preprocessing. Missing values are handled inside a Scikit-learn `Pipeline` with:
 
 ```python
 SimpleImputer(strategy="median")
 ```
 
-The imputer was therefore fitted only on the training data during model training.
+This means the imputer learns replacement values from the training data rather than from the full dataset, which helps prevent data leakage.
 
-Feature scaling was intentionally not applied to the baseline Ordinary Least Squares Linear Regression model because scaling is not required for its predictions, and keeping the original units makes coefficient interpretation more straightforward.
+I do not scale the features for the baseline Ordinary Least Squares model. Scaling is not required for Linear Regression predictions, and keeping the original units makes the raw coefficients easier to interpret.
 
 ---
 
 ## 6. Exploratory Data Analysis (EDA)
 
-The exploratory analysis included:
+The exploratory analysis covers:
 
-- Dataset structure and data types
-- Missing-value inspection
-- Duplicate detection
-- Target distribution
-- Boxplot analysis
-- Pearson correlation analysis
-- Feature-vs-target scatter plots
-- IQR-based outlier diagnostics
+- dataset structure and data types,
+- missing values,
+- duplicate detection,
+- target distribution,
+- boxplot review,
+- Pearson correlation,
+- feature-vs-target scatter plots,
+- and IQR-based outlier diagnostics.
 
-The analysis showed that:
+A few patterns stand out:
 
 - `RM` has a strong positive linear relationship with `MEDV`.
 - `LSTAT` has a strong negative linear relationship with `MEDV`.
-- The target contains multiple observations at `MEDV = 50`, so the upper end of the target distribution should be interpreted with caution.
+- Several observations sit exactly at `MEDV = 50`, so the upper end of the target should be interpreted cautiously.
 
-Pearson correlation was used because the baseline model focuses on linear relationships.
+Pearson correlation is used here because this first model focuses on linear relationships.
 
 ### Target Distribution
 
-The target variable (`MEDV`) shows the distribution of median home values in the dataset. A noticeable concentration appears near the upper value of 50, which suggests possible censoring at the high end of the dataset.
+The target is not evenly distributed across its range. The cluster at `MEDV = 50` is especially important because it suggests an upper-end ceiling in the historical data.
 
 ![Target Distribution](images/target_distribution.png)
 
 ### Correlation Analysis
 
-The correlation matrix provides an overview of the linear relationships between the numerical features and the target variable. `RM` shows a strong positive relationship with `MEDV`, while `LSTAT` shows a strong negative relationship.
+The correlation matrix gives a quick view of the strongest linear relationships in the dataset. `RM` moves positively with `MEDV`, while `LSTAT` shows a strong negative relationship.
 
 ![Correlation Matrix](images/correlation_matrix.png)
 
@@ -148,40 +140,38 @@ The correlation matrix provides an overview of the linear relationships between 
 
 ## 7. Statistical Analysis
 
-The statistical analysis focused on concepts directly relevant to regression modeling:
+The statistics in this project are used to support modeling decisions rather than as a separate checklist. The main topics are:
 
-- Mean and median
-- Variance and standard deviation
-- Pearson correlation
-- Covariance
-- Distribution shape
-- Outlier detection
-- Residual diagnostics
-- Normality assessment
-- Multicollinearity
-- Variance Inflation Factor (VIF)
+- mean and median,
+- variance and standard deviation,
+- Pearson correlation,
+- covariance,
+- distribution shape,
+- outlier diagnostics,
+- residual behavior,
+- normality assessment,
+- multicollinearity,
+- and Variance Inflation Factor (VIF).
 
-VIF was used as a diagnostic rather than as an automatic feature-removal rule.
+I use VIF as a diagnostic, not as an automatic rule for dropping features.
 
-Some predictors, particularly variables such as `RAD` and `TAX`, showed evidence of multicollinearity. These relationships were documented rather than automatically removed so the baseline model could remain transparent and reproducible.
+Some predictors, especially `RAD` and `TAX`, show notable multicollinearity. I keep them in the baseline so the first model remains transparent and reproducible, while interpreting their individual coefficients with caution.
 
 ---
 
 ## 8. Feature Engineering
 
-This project intentionally keeps feature engineering limited in order to establish a clear and interpretable baseline.
+I deliberately keep feature engineering light in this first pass. The aim is to understand what a straightforward linear baseline can do before adding transformations or more flexible models.
 
-Outliers were identified using the IQR method, but observations were not automatically clipped or removed.
+Outliers are flagged with the IQR rule, but they are not automatically clipped or removed. A statistically unusual observation is not necessarily an error, and removing it without investigation can distort the original relationships.
 
-This preserves the original structure of the historical dataset and avoids introducing arbitrary transformations before baseline performance is established.
+Potential extensions include:
 
-Potential future improvements include:
-
-- Polynomial features
-- Interaction terms
-- Feature selection
-- Robust transformations
-- Regularization
+- polynomial features,
+- interaction terms,
+- feature selection,
+- robust transformations,
+- and regularization.
 
 ---
 
@@ -189,34 +179,34 @@ Potential future improvements include:
 
 The baseline model is **Linear Regression**.
 
-Linear Regression models the target as a linear combination of the input features:
+It represents the prediction as a linear combination of the input features:
 
 ```text
 Prediction = Intercept + Coefficient₁ × Feature₁ + ... + Coefficientₙ × Featureₙ
 ```
 
-The coefficients are estimated using Ordinary Least Squares (OLS), which minimizes the sum of squared residuals between observed and predicted values.
+The coefficients are estimated with Ordinary Least Squares (OLS), which minimizes the sum of squared residuals between observed and predicted values.
 
-The fitted coefficients were extracted directly from the trained model rather than hard-coded.
+The fitted intercept and coefficients are read directly from the trained model rather than hard-coded.
 
 ---
 
 ## 10. Model Training
 
-The model was implemented using a Scikit-learn `Pipeline` containing:
+Training is intentionally simple:
 
-1. Median imputation
-2. Linear Regression
+1. median imputation,
+2. Linear Regression.
 
-The dataset was divided into training and testing subsets using a fixed random state for reproducibility.
+Both steps live inside the same Scikit-learn `Pipeline`.
 
-A 5-fold shuffled cross-validation procedure was also used to evaluate whether model performance remained reasonably stable across multiple train-validation splits.
+The data is split into training and test sets with a fixed random state for reproducibility. I also use shuffled 5-fold cross-validation so the assessment does not depend entirely on one train/test split.
 
 ---
 
 ## 11. Evaluation Metrics
 
-The model was evaluated using:
+I use several metrics because each one describes model error from a different angle:
 
 - **MAE — Mean Absolute Error**
 - **MSE — Mean Squared Error**
@@ -224,17 +214,15 @@ The model was evaluated using:
 - **R² — Coefficient of Determination**
 - **Adjusted R²**
 
-Lower values are better for MAE, MSE, and RMSE.
+Lower values are better for MAE, MSE, and RMSE. Higher values are generally better for R² and Adjusted R².
 
-Higher values are generally better for R² and Adjusted R².
+The numerical metrics are paired with:
 
-Model evaluation also included:
-
-- Actual vs. predicted values
-- Residual plot
-- Residual distribution
-- Q-Q plot
-- Cross-validation performance
+- actual vs. predicted values,
+- residuals vs. predicted values,
+- residual distribution,
+- a Q-Q plot,
+- and cross-validation results.
 
 ---
 
@@ -250,7 +238,7 @@ Model evaluation also included:
 | R² | ~0.659 |
 | Adjusted R² | ~0.609 |
 
-The model explains approximately 66% of the variance in the held-out test target.
+On the held-out test set, the model explains about 66% of the variation in `MEDV`. The RMSE is roughly 5 target units, or about \$5,000 in the dataset's original scale.
 
 ### 5-Fold Cross-Validation
 
@@ -260,23 +248,21 @@ The model explains approximately 66% of the variance in the held-out test target
 | MAE | ~3.415 |
 | RMSE | ~4.912 |
 
-Cross-validation provides a more robust estimate of generalization performance than relying only on a single train/test split.
+The cross-validation results are useful because they show how the same pipeline behaves across several different train-validation splits, rather than relying on a single split.
 
 ### Actual vs. Predicted Values
 
-The actual-versus-predicted plot provides a visual assessment of how closely the model predictions align with the observed housing values. Predictions closer to the reference line indicate better agreement with the true values.
+Most predictions follow the overall direction of the reference line, although the spread becomes more noticeable for some observations.
 
 ![Actual vs Predicted](images/actual_vs_predicted.png)
 
 ### Residual Diagnostics
 
-Residual analysis helps evaluate whether the assumptions of the linear regression model are reasonably satisfied.
-
-The residuals-versus-predicted plot is useful for identifying systematic patterns, non-linearity, and changes in residual variance.
+The residual plot helps reveal structure that a single R² value cannot show. Ideally, residuals should be scattered around zero without a clear pattern.
 
 ![Residuals vs Predicted](images/residuals_vs_predicted.png)
 
-The Q-Q plot compares the residual distribution with a theoretical normal distribution. Deviations from the reference line, particularly in the tails, indicate departures from normality.
+The Q-Q plot adds another view of the residual distribution. Departures from the reference line, especially in the tails, indicate that the residuals are not perfectly normal.
 
 ![Q-Q Plot of Residuals](images/qq_plot_residuals.png)
 
@@ -284,19 +270,17 @@ The Q-Q plot compares the residual distribution with a theoretical normal distri
 
 ## 13. Conclusion
 
-Linear Regression provides a useful and interpretable baseline for the Boston Housing dataset.
+Linear Regression turns out to be a useful baseline for this dataset, but not a complete solution.
 
-The model captures a substantial portion of the variation in housing values while remaining straightforward to inspect and explain.
+It captures a meaningful share of the variation in housing values and remains easy to inspect. At the same time, the residual diagnostics, multicollinearity, and remaining prediction error show why the model should not be judged by R² alone.
 
-This project also demonstrates why predictive metrics alone are not sufficient for evaluating a regression model. Residual behavior, multicollinearity, data quality, historical context, and model assumptions must also be considered.
-
-The baseline leaves room for improvement, particularly through regularization, nonlinear relationships, and more flexible regression algorithms.
+The main value of this baseline is that it gives a clear reference point for the next models. Regularization, nonlinear features, and tree-based regressors can now be compared against something simple and interpretable.
 
 ---
 
 ## 14. Future Improvements
 
-Potential next steps include:
+The next comparisons I would make are:
 
 - Ridge Regression
 - Lasso Regression
@@ -305,12 +289,12 @@ Potential next steps include:
 - Decision Tree Regression
 - Random Forest Regression
 - Gradient Boosting Regression
-- Hyperparameter tuning
-- Feature selection
-- More detailed residual diagnostics
-- Comparison of multiple regression algorithms
+- hyperparameter tuning
+- feature selection
+- more detailed residual diagnostics
+- comparison of multiple regression algorithms
 
-These extensions can help determine whether more flexible models provide meaningful improvements over the linear baseline.
+I would also investigate the `MEDV = 50` ceiling and influential observations before drawing stronger conclusions from the model.
 
 ---
 
@@ -341,9 +325,10 @@ These extensions can help determine whether more flexible models provide meaning
 
 ## 16. Kaggle Notebook
 
-An executable version of this project has been prepared on Kaggle for interactive exploration and reproducible execution. Public access is currently pending Kaggle account verification.
+An executable version of the project is available on Kaggle. The notebook has been prepared and run successfully; public access is currently pending Kaggle account verification.
 
 **Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-price-prediction-linear-regressio)
+
 ---
 
 ## Project Structure
@@ -377,31 +362,28 @@ boston-housing-linear-regression/
 
 ## What I Learned
 
-This project helped reinforce several important machine learning practices:
+The modeling code was the easy part of this project. The more useful lessons came from the decisions around it: where preprocessing belongs, how to avoid leakage, what residuals can reveal that a score cannot, and how to interpret a reasonable R² without overstating what the model has learned.
 
-- Building reproducible preprocessing pipelines
-- Preventing data leakage
-- Understanding when feature scaling is necessary
-- Interpreting regression coefficients
-- Evaluating regression models with multiple metrics
-- Using cross-validation instead of relying only on one train/test split
-- Diagnosing multicollinearity
-- Examining residual behavior
-- Separating predictive performance from statistical assumptions
-- Documenting machine learning work for reproducibility and portfolio presentation
+The project reinforced several habits I want to carry into later models:
+
+- fit preprocessing only on training data,
+- use cross-validation instead of trusting one split,
+- treat VIF and outlier rules as diagnostics rather than automatic deletion rules,
+- separate predictive performance from statistical assumptions,
+- and document both the strengths and the limits of a model.
 
 ---
 
 ## Repository Contents
 
-The repository contains:
+This repository includes:
 
-- A reproducible Jupyter Notebook
-- The dataset used in the project
-- Project dependencies
-- A Linear Regression tutorial
-- A statistics-for-regression guide
-- Portfolio-ready visualization assets
-- Full project documentation
+- a reproducible Jupyter Notebook,
+- the dataset used in the project,
+- project dependencies,
+- a Linear Regression tutorial,
+- a statistics-for-regression guide,
+- selected visualization assets,
+- and the full project documentation.
 
-You can start with the [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb) or review the [Linear Regression Tutorial](docs/linear_regression_tutorial.md) first.
+You can start with the [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb) for the complete workflow, or review the [Linear Regression Tutorial](docs/linear_regression_tutorial.md) first if you want the theory before the implementation.
