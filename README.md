@@ -327,7 +327,7 @@ I would also investigate the `MEDV = 50` ceiling and influential observations be
 
 An executable version of the project is available on Kaggle. The notebook has been prepared and run successfully; public access is currently pending Kaggle account verification.
 
-**Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-price-prediction-linear-regressio)
+**Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-prediction-linear-regression)
 
 ---
 
