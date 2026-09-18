@@ -91,7 +91,7 @@ Each of these columns contained 20 missing observations.
 | `PTRATIO` | Pupil-teacher ratio |
 | `B` | Historical race-derived feature from the original dataset |
 | `LSTAT` | Percentage of lower-status population |
-| `MEDV` | Median value of owner-occupied homes in $1000s |
+| `MEDV` | Median value of owner-occupied homes in \$1,000s |
 
 ---
 
@@ -131,6 +131,18 @@ The analysis showed that:
 - The target contains multiple observations at `MEDV = 50`, so the upper end of the target distribution should be interpreted with caution.
 
 Pearson correlation was used because the baseline model focuses on linear relationships.
+
+### Target Distribution
+
+The target variable (`MEDV`) shows the distribution of median home values in the dataset. A noticeable concentration appears near the upper value of 50, which suggests possible censoring at the high end of the dataset.
+
+![Target Distribution](images/target_distribution.png)
+
+### Correlation Analysis
+
+The correlation matrix provides an overview of the linear relationships between the numerical features and the target variable. `RM` shows a strong positive relationship with `MEDV`, while `LSTAT` shows a strong negative relationship.
+
+![Correlation Matrix](images/correlation_matrix.png)
 
 ---
 
@@ -250,6 +262,24 @@ The model explains approximately 66% of the variance in the held-out test target
 
 Cross-validation provides a more robust estimate of generalization performance than relying only on a single train/test split.
 
+### Actual vs. Predicted Values
+
+The actual-versus-predicted plot provides a visual assessment of how closely the model predictions align with the observed housing values. Predictions closer to the reference line indicate better agreement with the true values.
+
+![Actual vs Predicted](images/actual_vs_predicted.png)
+
+### Residual Diagnostics
+
+Residual analysis helps evaluate whether the assumptions of the linear regression model are reasonably satisfied.
+
+The residuals-versus-predicted plot is useful for identifying systematic patterns, non-linearity, and changes in residual variance.
+
+![Residuals vs Predicted](images/residuals_vs_predicted.png)
+
+The Q-Q plot compares the residual distribution with a theoretical normal distribution. Deviations from the reference line, particularly in the tails, indicate departures from normality.
+
+![Q-Q Plot of Residuals](images/qq_plot_residuals.png)
+
 ---
 
 ## 13. Conclusion
@@ -311,7 +341,7 @@ These extensions can help determine whether more flexible models provide meaning
 
 ## 16. Kaggle Notebook
 
-An executable version of this project is available on Kaggle for interactive exploration and reproducible execution.
+An executable version of this project has been prepared on Kaggle for interactive exploration and reproducible execution. Public access is currently pending Kaggle account verification.
 
 **Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-price-prediction-linear-regressio)
 ---
@@ -331,9 +361,16 @@ boston-housing-linear-regression/
 ├── notebooks/
 │   └── boston_housing_linear_regression.ipynb
 │
-└── docs/
-    ├── linear_regression_tutorial.md
-    └── statistics_for_regression.md
+├── docs/
+│   ├── linear_regression_tutorial.md
+│   └── statistics_for_regression.md
+│
+└── images/
+    ├── target_distribution.png
+    ├── correlation_matrix.png
+    ├── actual_vs_predicted.png
+    ├── residuals_vs_predicted.png
+    └── qq_plot_residuals.png
 ```
 
 ---
@@ -364,6 +401,7 @@ The repository contains:
 - Project dependencies
 - A Linear Regression tutorial
 - A statistics-for-regression guide
+- Portfolio-ready visualization assets
 - Full project documentation
 
 You can start with the [Jupyter Notebook](notebooks/boston_housing_linear_regression.ipynb) or review the [Linear Regression Tutorial](docs/linear_regression_tutorial.md) first.
