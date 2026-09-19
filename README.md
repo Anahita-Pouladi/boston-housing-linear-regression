@@ -22,6 +22,19 @@ Because `MEDV` is continuous, this is a supervised regression problem. I start w
 
 ---
 
+## Quick Results
+
+| Metric | Result |
+|---|---:|
+| Test R² | 0.659 |
+| Test RMSE | 5.00 |
+| 5-Fold CV R² | 0.708 |
+| 5-Fold CV RMSE | 4.912 |
+
+The held-out test set and cross-validation tell a similar story: Linear Regression is a useful baseline, but performance varies across splits and there is still meaningful prediction error. Reporting both gives a more balanced view of generalization than relying on a single score.
+
+---
+
 ## 2. Business / Problem Statement
 
 Rather than treating this as a pure prediction exercise, I use the baseline to answer three practical questions:
@@ -325,9 +338,9 @@ I would also investigate the `MEDV = 50` ceiling and influential observations be
 
 ## 16. Kaggle Notebook
 
-An executable version of the project is available on Kaggle. The notebook has been prepared and run successfully; public access is currently pending Kaggle account verification.
+The complete executable notebook is also available publicly on Kaggle.
 
-**Kaggle Notebook:** [Run on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-prediction-linear-regression)
+**Kaggle Notebook:** [View on Kaggle](https://www.kaggle.com/code/anahitapouladi/boston-housing-prediction-linear-regression)
 
 ---
 
